@@ -1,0 +1,121 @@
+<html>
+<head>
+   <title>Reservation</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+ 
+  $(document).ready(function(){
+  $('#Submit').click(function(){
+  var name=$('#fname').val();
+  var lname=$('#lname').val();
+  var alpha = /^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/;
+  var country = $("#Country option:selected").val();
+  if (!name.match(alpha)){
+        alert('Only Alphabtes and Space is Allowed :First name ');       
+        return false;	
+   }
+  else if(!lname.match(alpha)){
+	alert('Only Alphabtes and Space is Allowed :Last name ');       
+        return false;
+  } 
+ else if($('input[name=Gender]:checked').length<=0)
+{
+ alert("No radio checked");
+ return false;
+}
+else if($('input[name=marital]:checked').length<=0)
+{
+ alert("No Marital checked");
+ return false;
+}
+else if(country == "")
+{
+alert("COUNTRY SELECTION REQUIRED");
+return false;
+}
+else if ($('input:checkbox').filter(':checked').length < 1){
+        alert("*Mandatory One Degree!");
+		return false;
+		}
+   else
+   {
+
+var data = $('#form').serialize();
+console.log(data);
+$.ajax({
+    url: 'form.php',
+    dataType: 'json',
+    type: 'POST',
+    data:data,
+    success: function(response){
+        console.log(data);
+    },
+    error: function( jqXhr, textStatus, errorThrown ){
+        console.log( errorThrown );
+		}
+    });
+	   alert ("YOUR RESERVATION COMPLETELY SUCCESSFULLY");
+	return true;
+
+ }
+ $("#form").on("change", function() {
+        $("#form").submit();
+});
+});
+$(".file").on("change",function(){
+alert ("Inside File Function");
+   var file = new FormData();
+   file.append('file',$('.file')[0].files[0]);
+   $.ajax({
+    url: "upload.php",
+    type: "post",
+    data: file,
+    processData: false,
+    contentType: false, 
+	success:function(respo){
+     console.log(respo);
+	 $(".hidden").val(respo);
+    }
+});
+});
+});
+
+
+
+</script>
+</head>
+<body>
+	<form  name="form" id="form" method="POST"  enctype="multipart/form-data">
+	 <fieldset>
+		Name:<input type="text" name="name" placeholder="Name" id="fname" value=""required > &nbsp&nbsp 
+		Last Name: <input type="text" name="Lname" placeholder="lname" id="lname" value="" required>&nbsp&nbsp DOB: <input type="text" name="DOB" value="" required ><br><br>
+		Gender:<input type="radio" name=Gender value="male">Male &nbsp&nbsp&nbsp&nbsp <input type="radio" name=Gender value="male">Female <br><br>
+		Marital Status: <input type="radio" name="marital" value="Single">Single &nbsp&nbsp&nbsp&nbsp  <input type="radio" name="marital" value="Married">Married <br><br>
+		Country: <select name="country" id="Country">  
+						<option value="">Select country</option>
+						<option value="I">INDIA</option>
+						<option value="A">AUSTRALIA</option>
+						<option value="S">SRI LANKA</option>
+						<option value="p">PAKISTAN</option>		
+            	</select><br><br>
+		Address 1: &nbsp&nbsp <textarea name="adress1" rows="5" cols="50"> </textarea>&nbsp&nbsp&nbsp&nbsp
+		Address 2: &nbsp&nbsp <textarea name="adress2" rows="5" cols="50"> </textarea><br><br>
+		Post code: <input type="number" name="postcode" value="">&nbsp&nbsp
+		Mobile No: <input type="number" name="Mono" value="">&nbsp&nbsp 
+		Telephone No :<input type="number" name="Telephone" value="">&nbsp&nbsp
+		Email : <input type="email" id="email" name="mail" value=""><br><br>
+		Degree : <input type="checkbox" name="Degree[]" value="Associate degree">Associate degree &nbsp&nbsp
+				 <input type="checkbox" name="Degree[]" value="Bachelors degree ">Bachelors degree &nbsp&nbsp
+		         <input type="checkbox" name="Degree[]" value="Masters degree">Masters degree &nbsp&nbsp
+				 <input type="checkbox" name="Degree[]" value="PHD"> PHD <br><br>
+		Photo: <input type="file" id="fileToupload" name="pic" class="file"><br><br>
+		<input type="hidden" id="hidden" class="hidden" name="hidden" value="">
+		<input type="submit" name="submit" id="Submit" value="submit" class="file">&nbsp&nbsp<input type="reset" name="reset" value="reset">
+	
+	 </fieldset>
+	</form>
+
+
+
+</body>
+</html>
